@@ -1,65 +1,128 @@
-import './App.css';
-import { TodoList } from './components/todo/TodoList/TodoList';
-import type { ITodoItem, TodoStatus } from './types/todo.types';
+import React, { useState } from 'react';
+import { Button, Divider, message, Card } from 'antd';
+import { TodoForm } from './components/todo/TodoForm';
+import { TodoItem } from './components/todo/TodoItem';
+import type {ICreateTodoDto, IUpdateTodoDto, ITodoItem, TodoStatus} from './types/todo.types.ts';
 
-const todos: ITodoItem[] = [
-  {
-    id: '1',
-    title: 'Test Todo 1',
-    description: 'Це тестова задача 1',
-    status: 'Todo' as TodoStatus,
-    dueDate: new Date(),
-    isCompleted: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '2',
-    title: 'Test Todo 2',
-    description: 'Це тестова задача 2',
-    status: 'InProgress' as TodoStatus,
-    dueDate: new Date(),
-    isCompleted: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '3',
-    title: 'Test Todo 3',
-    description: 'Це тестова задача 3',
-    status: 'Done' as TodoStatus,
-    dueDate: new Date(),
-    isCompleted: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-];
+const App: React.FC = () => {
+  const [todos, setTodos] = useState<ITodoItem[]>([]);
+  const [editingTodo, setEditingTodo] = useState<ITodoItem | null>(null);
+  const [formVisible, setFormVisible] = useState(false);
 
-function App() {
-  const handleEdit = (todo: ITodoItem) => console.log('Edit', todo);
-  const handleDelete = (id: string) => console.log('Delete', id);
-  const handleStatusChange = (id: string, status: TodoStatus) => console.log('Status Change', id, status);
+  // Додавання або оновлення Todo
+  const handleFormSubmit = (values: ICreateTodoDto | IUpdateTodoDto) => {
+    if ('id' in values) {
+      // Update
+      setTodos((prev) =>
+        prev.map((todo) =>
+          todo.id === values.id
+            ? { ...todo, ...values }
+            : todo
+        )
+      );
+      message.success('Todo updated!');
+    } else {
+      // Create
+      const newTodo: ITodoItem = {
+        ...values,
+        id: Date.now().toString(),
+        status: 'Todo',
+        isCompleted: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      setTodos((prev) => [...prev, newTodo]);
+      message.success('Todo created!');
+    }
+    setEditingTodo(null);
+    setFormVisible(false);
+  };
+
+  // Редагування Todo
+  const handleEdit = (todo: ITodoItem) => {
+    setEditingTodo(todo);
+    setFormVisible(true);
+  };
+
+  // Видалення Todo
+  const handleDelete = (id: string) => {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    message.success('Todo deleted!');
+  };
+
+  // Зміна статусу Todo
+  const handleStatusChange = (id: string, status: TodoStatus) => {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id
+          ? { ...todo, status, isCompleted: status === 'Done' }
+          : todo
+      )
+    );
+  };
 
   return (
     <div
       style={{
         width: '80vw',
-        margin: '20px auto',
-        padding: 20,
-        border: '1px solid #ddd',
-        borderRadius: 8,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        margin: '0 auto',
+        padding: '20px',
+        position: 'relative',
       }}
     >
-      <TodoList
-        todos={todos}
-        loading={false}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onStatusChange={handleStatusChange}
-      />
+      <Card style={{ padding: '20px', background: '#fff', borderRadius: '8px' }}>
+        <Divider orientation="left">Todo List</Divider>
+        <Button
+          type="primary"
+          onClick={() => {
+            setEditingTodo(null);
+            setFormVisible(true);
+          }}
+        >
+          Add Todo
+        </Button>
+        <div style={{ marginTop: 20 }}>
+          {todos.map((todo) => (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onStatusChange={handleStatusChange}
+            />
+          ))}
+        </div>
+      </Card>
+
+      {/* Floating form at the bottom */}
+      {formVisible && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: 20,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '80vw',
+            maxWidth: '600px',
+            background: '#fff',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            zIndex: 1000,
+          }}
+        >
+          <TodoForm
+            initialValues={editingTodo || undefined}
+            onSubmit={handleFormSubmit}
+            onCancel={() => {
+              setEditingTodo(null);
+              setFormVisible(false);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
