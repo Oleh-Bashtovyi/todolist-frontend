@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import { Empty, Spin } from 'antd';
-import { TodoItem } from '../TodoItem';
-import type {ITodoItem, TodoStatus} from '../../../types/todo.types.ts';
+import { TodoItem } from '@todos/TodoItem';
+import type {ITodoItem, TodoStatus} from '@types';
 
 interface TodoListProps {
   todos: ITodoItem[];

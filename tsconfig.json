@@ -4,9 +4,4 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "paths": {
-    "@/*": ["./src/*"],
-    "@components/*": ["./src/components/*"],
-    "@types/*" : ["./src/types/*"],
-  }
 }

@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { Form, Input, DatePicker, Button, Space } from 'antd';
-import type {ICreateTodoDto, IUpdateTodoDto, ITodoItem} from '../../../types/todo.types.ts';
+import type {ICreateTodoDto, IUpdateTodoDto, ITodoItem} from '@types';
 import dayjs from 'dayjs';
 
 const { TextArea } = Input;

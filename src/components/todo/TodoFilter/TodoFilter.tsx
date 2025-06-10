@@ -1,8 +1,8 @@
 ﻿import React from 'react';
 import { Card, Select, Input, Checkbox, Space, Typography } from 'antd';
 import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
-import type { ITodoFilter, TodoStatus } from '@/types';
-import {TodoStatusEnum} from "@/types";
+import type { ITodoFilter, TodoStatus } from "@types";
+import {TodoStatusEnum} from "@types";
 
 const { Title } = Typography;
 const { Option } = Select;

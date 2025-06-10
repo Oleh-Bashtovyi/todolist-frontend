@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import { Card, Typography, Tag, Button, Space } from 'antd';
 import { EditOutlined, DeleteOutlined, CalendarOutlined } from '@ant-design/icons';
-import type {ITodoItem, TodoStatus} from '../../../types/todo.types.ts';
+import type {ITodoItem, TodoStatus} from '@types';
 
 const { Title, Text } = Typography;
 
