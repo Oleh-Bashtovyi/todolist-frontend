@@ -198,7 +198,9 @@ describe('TodoItem', () => {
         />
       );
 
-      expect(screen.getByText('To Do')).toBeInTheDocument();
+      // Use more specific query to find the status tag specifically
+      const statusTag = screen.getByTestId('status-tag');
+      expect(statusTag).toHaveTextContent('To Do');
     });
 
     it('should display correct status tag for InProgress status', () => {
@@ -213,7 +215,9 @@ describe('TodoItem', () => {
         />
       );
 
-      expect(screen.getByText('In Progress')).toBeInTheDocument();
+      // Use more specific query to find the status tag specifically
+      const statusTag = screen.getByTestId('status-tag');
+      expect(statusTag).toHaveTextContent('In Progress');
     });
 
     it('should display correct status tag for Done status', () => {
@@ -228,7 +232,9 @@ describe('TodoItem', () => {
         />
       );
 
-      expect(screen.getByText('Done')).toBeInTheDocument();
+      // Use more specific query to find the status tag specifically
+      const statusTag = screen.getByTestId('status-tag');
+      expect(statusTag).toHaveTextContent('Done');
     });
   });
 
@@ -283,8 +289,15 @@ describe('TodoItem', () => {
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
-      const inProgressButton = screen.getByText('In Progress');
-      await user.click(inProgressButton);
+
+      // Find the In Progress button among all buttons
+      const allButtons = screen.getAllByTestId('button');
+      const inProgressButton = allButtons.find(btn =>
+        btn.textContent === 'In Progress' && !btn.textContent.includes('Edit') && !btn.textContent.includes('Delete')
+      );
+
+      expect(inProgressButton).toBeInTheDocument();
+      await user.click(inProgressButton!);
       expect(mockOnStatusChange).toHaveBeenCalledWith(baseTodo.id, 'InProgress');
       expect(mockOnStatusChange).toHaveBeenCalledTimes(1);
     });
@@ -296,9 +309,11 @@ describe('TodoItem', () => {
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
+
       const buttons = screen.getAllByTestId('button');
       const inProgressButton = buttons.find(btn =>
-        btn.textContent === 'In Progress');
+        btn.textContent === 'In Progress' && !btn.textContent.includes('Edit') && !btn.textContent.includes('Delete')
+      );
       expect(inProgressButton).toHaveClass('primary');
     });
 
@@ -315,8 +330,14 @@ describe('TodoItem', () => {
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
 
-      const todoButton = screen.getByText('To Do');
-      await user.click(todoButton);
+      // Find the To Do button among status buttons specifically
+      const allButtons = screen.getAllByTestId('button');
+      const todoButton = allButtons.find(btn =>
+        btn.textContent === 'To Do' && !btn.textContent.includes('Edit') && !btn.textContent.includes('Delete')
+      );
+
+      expect(todoButton).toBeInTheDocument();
+      await user.click(todoButton!);
 
       expect(mockModalConfirm).toHaveBeenCalledWith(
         expect.objectContaining({
