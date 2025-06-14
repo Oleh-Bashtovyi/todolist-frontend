@@ -12,7 +12,8 @@
     '^@types$': '<rootDir>/src/types',
     '^@components/(.*)$': '<rootDir>/src/components/$1',
     '^@services/(.*)$': '<rootDir>/src/services/$1',
-    '^@store/(.*)$': '<rootDir>/src/store/$1'
+    '^@store/(.*)$': '<rootDir>/src/store/$1',
+    '^@todos/(.*)$':'<rootDir>/src/components/todo/$1'
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   collectCoverageFrom: [

@@ -22,17 +22,14 @@ export const TodoList: React.FC<TodoListProps> = ({
     return (
       <div style={{ textAlign: 'center', padding: '50px 0' }}>
         <Spin size="large" />
-      </div>
-    );
+      </div>);
   }
 
   if (todos.length === 0) {
     return (
       <Empty
         description="No todos found"
-        style={{ padding: '50px 0' }}
-      />
-    );
+        style={{ padding: '50px 0' }}/>);
   }
 
   return (
@@ -44,8 +41,6 @@ export const TodoList: React.FC<TodoListProps> = ({
           onEdit={onEdit}
           onDelete={onDelete}
           onStatusChange={onStatusChange}
-        />
-      ))}
-    </div>
-  );
+        />))}
+    </div>);
 };
