@@ -1,4 +1,5 @@
 ﻿import React from 'react';
+import { Modal } from 'antd';
 import { Card, Typography, Tag, Button, Space, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined, CalendarOutlined } from '@ant-design/icons';
 import type { ITodoItem, TodoStatus } from '@types';
@@ -45,9 +46,21 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   const { id, title, description, status, dueDate, isCompleted } = todo;
   const overdue = isOverdue(dueDate, isCompleted);
 
-  const handleStatusChange = (newStatus: TodoStatus) => {
+const handleStatusChange = (newStatus: TodoStatus) => {
+  if (status === 'Done' && newStatus !== 'Done') {
+    console.log('Opening confirmation modal...');
+    Modal.confirm({
+      title: 'Undone?',
+      content: 'This task is marked as done. Are you sure you want to change the status?',
+      okText: 'Yes',
+      cancelText: 'Cancel',
+      onOk: () => onStatusChange(id, newStatus),
+      getContainer: () => document.body,
+    });
+  } else {
     onStatusChange(id, newStatus);
-  };
+  }
+};
 
   // Build classes for the Card component
   const cardClasses = [
