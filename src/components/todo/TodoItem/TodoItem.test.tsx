@@ -10,21 +10,21 @@ jest.mock('antd', () => ({
   Modal: {
     confirm: jest.fn()
   },
-  Card: ({ children, className }: any) => (
+  Card: ({ children, className }: never) => (
     <div className={className} data-testid="todo-card">{children}</div>
   ),
   Typography: {
-    Title: ({ children, className, level }: any) => (
+    Title: ({ children, className, level }: never) => (
       <div className={className} data-testid={`title-${level}`}>{children}</div>
     ),
-    Text: ({ children, type, className }: any) => (
+    Text: ({ children, type, className }: never) => (
       <span className={`${className || ''} ${type || ''}`} data-testid="text">{children}</span>
     ),
   },
-  Tag: ({ children, color }: any) => (
+  Tag: ({ children, color }: never) => (
     <span className={`tag tag-${color}`} data-testid="status-tag">{children}</span>
   ),
-  Button: ({ children, onClick, icon, type, size, danger, ...props }: any) => (
+  Button: ({ children, onClick, icon, type, size, danger, ...props }: never) => (
     <button
       {...props}
       onClick={onClick}
@@ -35,8 +35,8 @@ jest.mock('antd', () => ({
       {children}
     </button>
   ),
-  Space: ({ children }: any) => <div className="space" data-testid="space">{children}</div>,
-  Tooltip: ({ children, title }: any) => (
+  Space: ({ children }: never) => <div className="space" data-testid="space">{children}</div>,
+  Tooltip: ({ children, title }: never) => (
     <div title={title} data-testid="tooltip">{children}</div>
   ),
 }));
