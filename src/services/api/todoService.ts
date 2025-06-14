@@ -14,6 +14,7 @@ class TodoService {
       ...options,
     };
 
+    console.log('Fetching from url: ' + url.toString());
     const response = await fetch(url, config);
 
     if (!response.ok) {

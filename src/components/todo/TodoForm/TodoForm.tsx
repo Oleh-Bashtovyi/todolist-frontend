@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿import React, { useEffect } from 'react';
 import { Form, Input, DatePicker, Button, Space } from 'antd';
 import type {ICreateTodoDto, IUpdateTodoDto, ITodoItem} from '@types';
 import dayjs from 'dayjs';
@@ -21,7 +21,7 @@ export const TodoForm: React.FC<TodoFormProps> = ({
   const [form] = Form.useForm();
   const isEdit = !!initialValues;
 
-  // Підготовка initialValues для форми (конвертуємо dueDate у dayjs)
+  // Підготовка initialValues для форми
   const preparedInitialValues = initialValues ? {
     ...initialValues,
     dueDate: initialValues.dueDate ? dayjs(initialValues.dueDate) : null
@@ -31,6 +31,11 @@ export const TodoForm: React.FC<TodoFormProps> = ({
     dueDate: null
   };
 
+  // Оновлюємо форму при зміні initialValues
+  useEffect(() => {
+    form.setFieldsValue(preparedInitialValues);
+  }, [initialValues, form]);
+
   const handleSubmit = (values: any) => {
     const formData = {
       ...values,
@@ -38,10 +43,7 @@ export const TodoForm: React.FC<TodoFormProps> = ({
     };
 
     if (isEdit && initialValues) {
-      onSubmit({
-        id: initialValues.id,
-        ...formData
-      } as IUpdateTodoDto);
+      onSubmit({ id: initialValues.id, ...formData } as IUpdateTodoDto);
     } else {
       onSubmit(formData as ICreateTodoDto);
     }
@@ -53,7 +55,6 @@ export const TodoForm: React.FC<TodoFormProps> = ({
       layout="vertical"
       onFinish={handleSubmit}
       initialValues={preparedInitialValues}
-      key={initialValues?.id ?? 'new'}  // щоб перерендеривало при зміні initialValues
     >
       <Form.Item
         label="Title"
@@ -66,20 +67,11 @@ export const TodoForm: React.FC<TodoFormProps> = ({
         <Input placeholder="Enter todo title" />
       </Form.Item>
 
-      <Form.Item
-        label="Description"
-        name="description"
-      >
-        <TextArea
-          rows={4}
-          placeholder="Enter todo description (optional)"
-        />
+      <Form.Item label="Description" name="description">
+        <TextArea rows={4} placeholder="Enter todo description (optional)" />
       </Form.Item>
 
-      <Form.Item
-        label="Due Date"
-        name="dueDate"
-      >
+      <Form.Item label="Due Date" name="dueDate">
         <DatePicker
           style={{ width: '100%' }}
           placeholder="Select due date (optional)"
@@ -92,9 +84,7 @@ export const TodoForm: React.FC<TodoFormProps> = ({
           <Button type="primary" htmlType="submit" loading={loading}>
             {isEdit ? 'Update' : 'Create'}
           </Button>
-          <Button onClick={onCancel}>
-            Cancel
-          </Button>
+          <Button onClick={onCancel}>Cancel</Button>
         </Space>
       </Form.Item>
     </Form>

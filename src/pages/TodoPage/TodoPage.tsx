@@ -32,6 +32,7 @@ export const TodoPage: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    console.log('Error:', error);
     if (error) {
       notification.error({
         message: 'Error',
@@ -57,9 +58,10 @@ export const TodoPage: React.FC = () => {
     }
 
     if (filter.overdue) {
+      const curDate = new Date();
       filtered = filtered.filter(todo => {
         if (!todo.dueDate || todo.status === 'Done') return false;
-        return new Date(todo.dueDate) < new Date();
+        return todo.dueDate < curDate;
       });
     }
 
@@ -79,6 +81,7 @@ export const TodoPage: React.FC = () => {
   };
 
   const handleDeleteTodo = (id: string) => {
+    console.log('Trying to delete');
     Modal.confirm({
       title: 'Delete Todo',
       content: 'Are you sure you want to delete this todo?',
