@@ -167,14 +167,12 @@ export const TodoPage: React.FC = () => {
           open={isModalVisible}
           onCancel={handleCancel}
           footer={null}
-          width={600}
-        >
+          width={600}>
           <TodoForm
             initialValues={selectedTodo || undefined}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
-            loading={loading}
-          />
+            loading={loading}/>
         </Modal>
       </Content>
     </Layout>

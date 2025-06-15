@@ -7,7 +7,7 @@ import {TodoStatusEnum} from "@types";
 const { Title } = Typography;
 const { Option } = Select;
 
-interface TodoFilterProps {
+export interface TodoFilterProps {
   filters: ITodoFilter;
   onFilterChange: (filters: ITodoFilter) => void;
 }
@@ -50,6 +50,7 @@ export const TodoFilter: React.FC<TodoFilterProps> = ({
         <Space wrap>
           <Input
             placeholder="Search todos..."
+            data-testid="text-search-input"
             prefix={<SearchOutlined />}
             value={filters.searchTerm || ''}
             onChange={handleSearchChange}
@@ -58,6 +59,7 @@ export const TodoFilter: React.FC<TodoFilterProps> = ({
 
           <Select
             placeholder="Filter by status"
+            data-testid="status-search-input"
             style={{ width: 150 }}
             value={filters.status}
             onChange={handleStatusChange}
@@ -69,6 +71,7 @@ export const TodoFilter: React.FC<TodoFilterProps> = ({
 
           <Checkbox
             checked={filters.overdue || false}
+            data-testid="overdue-search-input"
             onChange={(e) => handleOverdueChange(e.target.checked)}>
             Show overdue only
           </Checkbox>

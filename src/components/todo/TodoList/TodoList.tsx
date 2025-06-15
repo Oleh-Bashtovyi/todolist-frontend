@@ -3,7 +3,7 @@ import { Empty, Spin } from 'antd';
 import { TodoItem } from '@todos/TodoItem';
 import type {ITodoItem, TodoStatus} from '@types';
 
-interface TodoListProps {
+export interface TodoListProps {
   todos: ITodoItem[];
   loading: boolean;
   onEdit: (todo: ITodoItem) => void;
@@ -21,18 +21,16 @@ export const TodoList: React.FC<TodoListProps> = ({
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '50px 0' }}>
-        <Spin size="large" />
-      </div>
-    );
+        <Spin data-testid="spin-component" size="large" />
+      </div>);
   }
 
   if (todos.length === 0) {
     return (
       <Empty
-        description="No todos found"
-        style={{ padding: '50px 0' }}
-      />
-    );
+          data-testid="empty-component"
+          description="No todos found"
+          style={{ padding: '50px 0' }}/>);
   }
 
   return (
@@ -44,8 +42,6 @@ export const TodoList: React.FC<TodoListProps> = ({
           onEdit={onEdit}
           onDelete={onDelete}
           onStatusChange={onStatusChange}
-        />
-      ))}
-    </div>
-  );
+        />))}
+    </div>);
 };
