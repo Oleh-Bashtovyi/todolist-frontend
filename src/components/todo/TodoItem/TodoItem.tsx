@@ -70,27 +70,31 @@ const handleStatusChange = (newStatus: TodoStatus) => {
   ].filter(Boolean).join(' ');
 
   return (
-    <Card size="small" className={cardClasses}>
+    <Card size="small" className={cardClasses} data-testid="todo-card">
+
       {/* Title and action buttons */}
       <div className={styles.header}>
         <div className={styles.titleContainer}>
           <Title
             level={5}
+            data-testid="title-text"
             className={`${styles.title} ${isCompleted ? styles.completedTitle : ''}`}>
             {title}
           </Title>
         </div>
         <div className={styles.actions}>
-          <Tooltip title="Edit">
+          <Tooltip title="Edit" data-testid="edit-tooltip">
             <Button
               type="text"
+              data-testid="edit-button"
               icon={<EditOutlined />}
               onClick={() => onEdit(todo)}
             />
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title="Delete" data-testid="delete-tooltip">
             <Button
               type="text"
+              data-testid="delete-button"
               icon={<DeleteOutlined />}
               onClick={() => onDelete(id)}
               danger/>
@@ -111,13 +115,13 @@ const handleStatusChange = (newStatus: TodoStatus) => {
             </Text>
           </div>
         )}
-        <Tag color={getStatusColor(status)}>{getStatusText(status)}</Tag>
+        <Tag color={getStatusColor(status)} data-testid="status-tag">{getStatusText(status)}</Tag>
       </div>
 
       {/* Description */}
       {description && (
         <div className={styles.descriptionContainer}>
-          <Text type="secondary" className={styles.description}>
+          <Text type="secondary" className={styles.description} data-testid="description-text">
             {description}
           </Text>
         </div>
@@ -128,18 +132,21 @@ const handleStatusChange = (newStatus: TodoStatus) => {
         <Space>
           <Button
             size="small"
+            data-testid="todo-button"
             type={status === 'Todo' ? 'primary' : 'default'}
             onClick={() => handleStatusChange('Todo')}>
             To Do
           </Button>
           <Button
             size="small"
+            data-testid="in-progress-button"
             type={status === 'InProgress' ? 'primary' : 'default'}
             onClick={() => handleStatusChange('InProgress')}>
             In Progress
           </Button>
           <Button
             size="small"
+            data-testid="done-button"
             type={status === 'Done' ? 'primary' : 'default'}
             onClick={() => handleStatusChange('Done')}>
             Done

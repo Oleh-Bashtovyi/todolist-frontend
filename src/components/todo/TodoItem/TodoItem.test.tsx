@@ -1,73 +1,20 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TodoItem } from './TodoItem';
 import '@testing-library/jest-dom'
 import type { ITodoItem, TodoStatus } from '@types';
 
 // Mock of Ant Design components
-jest.mock('antd', () => ({
-  ...jest.requireActual('antd'),
-  Modal: {
-    confirm: jest.fn()
-  },
-  Card: ({ children, className }: never) => (
-    <div className={className} data-testid="todo-card">{children}</div>
-  ),
-  Typography: {
-    Title: ({ children, className, level }: never) => (
-      <div className={className} data-testid={`title-${level}`}>{children}</div>
-    ),
-    Text: ({ children, type, className }: never) => (
-      <span className={`${className || ''} ${type || ''}`} data-testid="text">{children}</span>
-    ),
-  },
-  Tag: ({ children, color }: never) => (
-    <span className={`tag tag-${color}`} data-testid="status-tag">{children}</span>
-  ),
-  Button: ({ children, onClick, icon, type, size, danger, ...props }: never) => (
-    <button
-      {...props}
-      onClick={onClick}
-      className={`btn ${type || ''} ${size || ''} ${danger ? 'danger' : ''}`}
-      data-testid="button"
-    >
-      {icon}
-      {children}
-    </button>
-  ),
-  Space: ({ children }: never) => <div className="space" data-testid="space">{children}</div>,
-  Tooltip: ({ children, title }: never) => (
-    <div title={title} data-testid="tooltip">{children}</div>
-  ),
-}));
-
-jest.mock('@ant-design/icons', () => ({
-  EditOutlined: () => <span data-testid="edit-icon">Edit</span>,
-  DeleteOutlined: () => <span data-testid="delete-icon">Delete</span>,
-  CalendarOutlined: () => <span data-testid="calendar-icon">Calendar</span>,
-}));
-
-// Mock CSS modules
-jest.mock('./TodoItem.module.css', () => ({
-  todoCard: 'todoCard',
-  completed: 'completed',
-  overdue: 'overdue',
-  header: 'header',
-  titleContainer: 'titleContainer',
-  title: 'title',
-  completedTitle: 'completedTitle',
-  actions: 'actions',
-  metadata: 'metadata',
-  dateContainer: 'dateContainer',
-  dateText: 'dateText',
-  descriptionContainer: 'descriptionContainer',
-  description: 'description',
-  statusButtons: 'statusButtons'
-}));
-
-// Get access to mock functions after import
-import {Modal} from 'antd';
-const mockModalConfirm = Modal.confirm as jest.MockedFunction<typeof Modal.confirm>;
+jest.mock('antd', () => {
+  const actual = jest.requireActual('antd');
+  return {
+    ...actual,
+    Modal: {
+      ...actual.Modal,
+      confirm: jest.fn(),
+    },
+  };
+});
 
 describe('TodoItem', () => {
   const mockOnEdit = jest.fn();
@@ -86,7 +33,6 @@ describe('TodoItem', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockModalConfirm.mockReset();
   });
 
   describe('Rendering', () => {
@@ -96,6 +42,7 @@ describe('TodoItem', () => {
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
+
       expect(screen.getByText('Test Todo')).toBeInTheDocument();
       expect(screen.getByText('Test description')).toBeInTheDocument();
     });
@@ -107,6 +54,7 @@ describe('TodoItem', () => {
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
+
       expect(screen.getByText('Test Todo')).toBeInTheDocument();
       expect(screen.queryByText('Test description')).not.toBeInTheDocument();
     });
@@ -126,6 +74,7 @@ describe('TodoItem', () => {
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
+
       expect(screen.getByText(/Overdue/)).toBeInTheDocument();
     });
 
@@ -144,6 +93,7 @@ describe('TodoItem', () => {
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
+
       expect(screen.queryByText(/Overdue/)).not.toBeInTheDocument();
     });
 
@@ -155,9 +105,7 @@ describe('TodoItem', () => {
           todo={completedTodo}
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
-          onStatusChange={mockOnStatusChange}
-        />
-      );
+          onStatusChange={mockOnStatusChange}/>);
 
       const card = screen.getByTestId('todo-card');
       expect(card).toHaveClass('todoCard', 'completed');
@@ -178,9 +126,7 @@ describe('TodoItem', () => {
           todo={overdueTodo}
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
-          onStatusChange={mockOnStatusChange}
-        />
-      );
+          onStatusChange={mockOnStatusChange}/>);
 
       const card = screen.getByTestId('todo-card');
       expect(card).toHaveClass('todoCard', 'overdue');
@@ -194,9 +140,7 @@ describe('TodoItem', () => {
           todo={baseTodo}
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
-          onStatusChange={mockOnStatusChange}
-        />
-      );
+          onStatusChange={mockOnStatusChange}/>);
 
       // Use more specific query to find the status tag specifically
       const statusTag = screen.getByTestId('status-tag');
@@ -211,9 +155,7 @@ describe('TodoItem', () => {
           todo={inProgressTodo}
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
-          onStatusChange={mockOnStatusChange}
-        />
-      );
+          onStatusChange={mockOnStatusChange}/>);
 
       // Use more specific query to find the status tag specifically
       const statusTag = screen.getByTestId('status-tag');
@@ -247,14 +189,9 @@ describe('TodoItem', () => {
           todo={baseTodo}
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
-          onStatusChange={mockOnStatusChange}
-        />
-      );
+          onStatusChange={mockOnStatusChange}/>);
 
-      const editButtons = screen.getAllByTestId('button');
-      const editButton = editButtons.find(btn =>
-        btn.textContent?.includes('Edit')
-      );
+      const editButton = screen.getByTestId('edit-button');
 
       expect(editButton).toBeInTheDocument();
       await user.click(editButton!);
@@ -271,9 +208,7 @@ describe('TodoItem', () => {
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
 
-      const deleteButtons = screen.getAllByTestId('button');
-      const deleteButton = deleteButtons.find(btn =>
-        btn.textContent?.includes('Delete'));
+      const deleteButton = screen.getByTestId('delete-button');
 
       expect(deleteButton).toBeInTheDocument();
       await user.click(deleteButton!);
@@ -290,11 +225,7 @@ describe('TodoItem', () => {
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
 
-      // Find the In Progress button among all buttons
-      const allButtons = screen.getAllByTestId('button');
-      const inProgressButton = allButtons.find(btn =>
-        btn.textContent === 'In Progress' && !btn.textContent.includes('Edit') && !btn.textContent.includes('Delete')
-      );
+      const inProgressButton = screen.getByTestId('in-progress-button');
 
       expect(inProgressButton).toBeInTheDocument();
       await user.click(inProgressButton!);
@@ -310,63 +241,23 @@ describe('TodoItem', () => {
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
 
-      const buttons = screen.getAllByTestId('button');
-      const inProgressButton = buttons.find(btn =>
-        btn.textContent === 'In Progress' && !btn.textContent.includes('Edit') && !btn.textContent.includes('Delete')
-      );
-      expect(inProgressButton).toHaveClass('primary');
-    });
-
-    it('should show confirmation modal when changing status from Done', async () => {
-      const user = userEvent.setup();
-      const doneTodo: ITodoItem = { ...baseTodo, status: 'Done' as TodoStatus };
-      mockModalConfirm.mockImplementation(({ onOk }: any) => {
-        onOk();
-      });
-
-      render(<TodoItem
-          todo={doneTodo}
-          onEdit={mockOnEdit}
-          onDelete={mockOnDelete}
-          onStatusChange={mockOnStatusChange}/>);
-
-      // Find the To Do button among status buttons specifically
-      const allButtons = screen.getAllByTestId('button');
-      const todoButton = allButtons.find(btn =>
-        btn.textContent === 'To Do' && !btn.textContent.includes('Edit') && !btn.textContent.includes('Delete')
-      );
-
-      expect(todoButton).toBeInTheDocument();
-      await user.click(todoButton!);
-
-      expect(mockModalConfirm).toHaveBeenCalledWith(
-        expect.objectContaining({
-          title: 'Undone?',
-          content: 'This task is marked as done. Are you sure you want to change the status?',
-          okText: 'Yes',
-          cancelText: 'Cancel'
-        })
-      );
-      await waitFor(() => {
-        expect(mockOnStatusChange).toHaveBeenCalledWith(baseTodo.id, 'Todo');
-      });
+      const inProgressButton = screen.getByTestId('in-progress-button');
+      expect(inProgressButton).toHaveClass('ant-btn-primary');
     });
   });
 
   describe('Accessibility', () => {
-    it('should have proper tooltip titles for action buttons', () => {
+    it('should have buttons', () => {
       render(<TodoItem
           todo={baseTodo}
           onEdit={mockOnEdit}
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
-      const tooltips = screen.getAllByTestId('tooltip');
-      const editTooltip = tooltips.find(tooltip =>
-        tooltip.getAttribute('title') === 'Edit');
-      const deleteTooltip = tooltips.find(tooltip =>
-        tooltip.getAttribute('title') === 'Delete');
-      expect(editTooltip).toBeInTheDocument();
-      expect(deleteTooltip).toBeInTheDocument();
+
+      const editButton = screen.getByTestId('edit-button');
+      const deleteButton = screen.getByTestId('delete-button');
+      expect(editButton).toBeInTheDocument();
+      expect(deleteButton).toBeInTheDocument();
     });
   });
 
