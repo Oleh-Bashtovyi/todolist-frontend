@@ -1,18 +1,18 @@
-import {render, screen, waitFor} from '@testing-library/react';
+import {render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TodoFilter } from './TodoFilter';
 import type { ITodoFilter } from '@types';
 import { TodoStatusEnum } from '@types';
 
-const mockFilters: ITodoFilter = {
-  status: undefined,
-  overdue: undefined,
-  searchTerm: undefined
-};
-
-const mockOnFilterChange = jest.fn();
-
 describe('TodoFilter', () => {
+  const mockOnFilterChange = jest.fn();
+
+  const mockFilters: ITodoFilter = {
+    status: undefined,
+    overdue: undefined,
+    searchTerm: undefined
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -28,7 +28,7 @@ describe('TodoFilter', () => {
     expect(screen.getByText('Show overdue only')).toBeInTheDocument();
   });
 
-  it('should handle status filter changes', async () => {
+    it('should handle status filter changes', async () => {
     const user = userEvent.setup();
 
     render(<TodoFilter
@@ -46,6 +46,7 @@ describe('TodoFilter', () => {
     });
   });
 
+
   it('should handle overdue checkbox changes', async () => {
     const user = userEvent.setup();
 
@@ -53,7 +54,7 @@ describe('TodoFilter', () => {
         filters={mockFilters}
         onFilterChange={mockOnFilterChange}/>);
 
-    const overdueCheckbox = screen.getByRole('checkbox', { name: /show overdue only/i });
+    const overdueCheckbox = screen.getByTestId('overdue-search-input');
 
     await user.click(overdueCheckbox);
 
@@ -70,15 +71,14 @@ describe('TodoFilter', () => {
       searchTerm: 'existing search'
     };
 
-    render(
-      <TodoFilter
+    render(<TodoFilter
         filters={activeFilters}
         onFilterChange={mockOnFilterChange}/>);
 
-    const searchInput = screen.getByDisplayValue('existing search');
+    const searchInput = screen.getByTestId('text-search-input');
     expect(searchInput).toBeInTheDocument();
 
-    const overdueCheckbox = screen.getByRole('checkbox', { name: /show overdue only/i });
+    const overdueCheckbox = screen.getByTestId('overdue-search-input');
     expect(overdueCheckbox).toBeChecked();
     expect(screen.getByText('Done')).toBeInTheDocument();
   });

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TodoList } from './TodoList';
+import {TodoList, TodoListProps} from './TodoList';
 import type { TodoItemProps } from "@todos/TodoItem";
 import type { ITodoItem, TodoStatus } from '@types';
 
@@ -48,7 +48,7 @@ describe('TodoList Component', () => {
     },
   ];
 
-  const mockProps = {
+  const mockProps: TodoListProps = {
     todos: mockTodos,
     loading: false,
     onEdit: jest.fn(),
