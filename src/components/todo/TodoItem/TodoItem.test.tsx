@@ -142,7 +142,6 @@ describe('TodoItem', () => {
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
 
-      // Use more specific query to find the status tag specifically
       const statusTag = screen.getByTestId('status-tag');
       expect(statusTag).toHaveTextContent('To Do');
     });
@@ -157,7 +156,6 @@ describe('TodoItem', () => {
           onDelete={mockOnDelete}
           onStatusChange={mockOnStatusChange}/>);
 
-      // Use more specific query to find the status tag specifically
       const statusTag = screen.getByTestId('status-tag');
       expect(statusTag).toHaveTextContent('In Progress');
     });
@@ -174,7 +172,6 @@ describe('TodoItem', () => {
         />
       );
 
-      // Use more specific query to find the status tag specifically
       const statusTag = screen.getByTestId('status-tag');
       expect(statusTag).toHaveTextContent('Done');
     });
