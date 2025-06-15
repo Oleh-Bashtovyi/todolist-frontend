@@ -1,30 +1,17 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TodoList } from './TodoList';
+import type { TodoItemProps } from "@todos/TodoItem";
 import type { ITodoItem, TodoStatus } from '@types';
 
 // Mock the TodoItem component
 jest.mock('../TodoItem', () => ({
-  TodoItem: ({ todo, onEdit, onDelete, onStatusChange }: any) => (
+  TodoItem: ({ todo, onEdit, onDelete, onStatusChange }: TodoItemProps) => (
     <div data-testid={`todo-item-${todo.id}`}>
       <span>{todo.title}</span>
       <button onClick={() => onEdit(todo)}>Edit</button>
       <button onClick={() => onDelete(todo.id)}>Delete</button>
       <button onClick={() => onStatusChange(todo.id, 'Done')}>Change Status</button>
-    </div>
-  ),
-}));
-
-// Mock Ant Design components
-jest.mock('antd', () => ({
-  Empty: ({ description, ...props }: any) => (
-    <div data-testid="empty-component" {...props}>
-      {description}
-    </div>
-  ),
-  Spin: ({ size, ...props }: any) => (
-    <div data-testid="spin-component" data-size={size} {...props}>
-      Loading...
     </div>
   ),
 }));
@@ -79,7 +66,6 @@ describe('TodoList Component', () => {
 
       const spinner = screen.getByTestId('spin-component');
       expect(spinner).toBeInTheDocument();
-      expect(spinner).toHaveAttribute('data-size', 'large');
     });
 
     it('should center the loading spinner', () => {

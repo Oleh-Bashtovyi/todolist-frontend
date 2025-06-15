@@ -7,7 +7,7 @@ import styles from './TodoItem.module.css';
 
 const { Title, Text } = Typography;
 
-interface TodoItemProps {
+export interface TodoItemProps {
   todo: ITodoItem;
   onEdit: (todo: ITodoItem) => void;
   onDelete: (id: string) => void;
