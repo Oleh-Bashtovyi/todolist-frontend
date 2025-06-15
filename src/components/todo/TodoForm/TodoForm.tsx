@@ -1,6 +1,6 @@
 ﻿import React, { useEffect } from 'react';
-import { Form, Input, DatePicker, Button, Space } from 'antd';
-import type {ICreateTodoDto, IUpdateTodoDto, ITodoItem} from '@types';
+import { Form, Input, DatePicker, Button, Space, Alert } from 'antd';
+import type { ICreateTodoDto, IUpdateTodoDto, ITodoItem } from '@types';
 import dayjs from 'dayjs';
 
 const { TextArea } = Input;
@@ -21,17 +21,17 @@ export const TodoForm: React.FC<TodoFormProps> = ({
   const [form] = Form.useForm();
   const isEdit = !!initialValues;
 
-  // Підготовка initialValues для форми
-  const preparedInitialValues = initialValues ? {
-    ...initialValues,
-    dueDate: initialValues.dueDate ? dayjs(initialValues.dueDate) : null
-  } : {
-    title: '',
-    description: '',
-    dueDate: null
-  };
+  const preparedInitialValues = initialValues
+    ? {
+        ...initialValues,
+        dueDate: initialValues?.dueDate ? dayjs(initialValues.dueDate) : undefined
+      }
+    : {
+        title: '',
+        description: '',
+        dueDate: null
+      };
 
-  // Оновлюємо форму при зміні initialValues
   useEffect(() => {
     form.setFieldsValue(preparedInitialValues);
   }, [initialValues, form]);
@@ -48,6 +48,12 @@ export const TodoForm: React.FC<TodoFormProps> = ({
       onSubmit(formData as ICreateTodoDto);
     }
   };
+
+  const selectedDate = Form.useWatch('dueDate', form);
+
+  const isPastDate = selectedDate
+    ? selectedDate.startOf('day').isBefore(dayjs().startOf('day'))
+    : false;
 
   return (
     <Form
@@ -78,6 +84,17 @@ export const TodoForm: React.FC<TodoFormProps> = ({
           showTime={false}
         />
       </Form.Item>
+
+      {isPastDate && (
+        <div style={{ marginBottom: 16 }}>
+          <Alert
+            type="warning"
+            showIcon
+            message="Selected due date is in the past"
+            description="You are selecting a date that has already passed. Make sure this is intentional."
+          />
+        </div>
+      )}
 
       <Form.Item>
         <Space>
